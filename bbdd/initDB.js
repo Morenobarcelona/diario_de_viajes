@@ -1,4 +1,5 @@
-const { formatDate } = require('../helpers');
+const faker = require('faker/locale/es');
+const { formatDate, getRandomValue } = require('../helpers');
 const getDB = require('./getDB.js');
 
 async function main() {
@@ -12,7 +13,7 @@ async function main() {
     await connection.query('DROP TABLE IF EXISTS votes;');
     await connection.query('DROP TABLE IF EXISTS photos;');
 
-    console.log('TAblas eliminadas');
+    console.log('Tablas eliminadas');
 
     await connection.query(`
         CREATE TABLE users (
@@ -26,7 +27,7 @@ async function main() {
           role ENUM ("admin","normal") DEFAULT "normal" NOT NULL,
           registrationCode VARCHAR(100),
           recoverCode VARCHAR(100),
-          createAt DATETIME NOT NULL,
+          createdAt DATETIME NOT NULL,
           modifiedAt DATETIME
 
         )
@@ -35,12 +36,12 @@ async function main() {
 
     //Crear la tabla de entradas
     await connection.query(`
-             CREATE TABLE entries ( 
+             CREATE TABLE entries (
               id INT PRIMARY KEY AUTO_INCREMENT,
               place VARCHAR(100) NOT NULL,
               description TEXT,
               idUser INT NOT NULL,
-              createAt DATETIME NOT NULL,
+              createdAt DATETIME NOT NULL,
               modifiedAt DATETIME
           
               )
@@ -73,7 +74,7 @@ async function main() {
     //INSERTAR EL USUARIO ADMINISTRADOR.
 
     await connection.query(`
-              INSERT INTO users (email,password,name,active,role, createAt)
+              INSERT INTO users (email,password,name,active,role, createdAt)
               VALUES (
                 "AHBHB1987@GMAIL.COM",
                 "123456",
@@ -86,7 +87,49 @@ async function main() {
 
             `);
 
-    console.log('usuario administrador creado');
+    console.log('Creado usuario administrador');
+
+    const USERS = 10;
+
+    for (let i = 0; i < USERS; i++) {
+      const email = faker.internet.password();
+      const password = faker.internet.password();
+      const name = faker.name.findName();
+
+      //fECHA DE CREACION
+      const createdAt = formatDate(new Date());
+
+      await connection.query(`
+                    
+                    INSERT INTO users ( email, password,name,active, createdAt)
+                    VALUES ( "${email}", "${password}", "${name}", true, "${createdAt}" )
+                    
+                    `);
+    }
+
+    console.log('Usuarios Creados');
+
+    // Nº entradas a introducir
+
+    const ENTRIES = 100;
+
+    for (let i = 0; i < ENTRIES; i++) {
+      const place = faker.address.city();
+      const description = faker.lorem.paragraph();
+      const idUser = getRandomValue(2, USERS + 1);
+
+      //fECHA DE CREACION
+      const createdAt = formatDate(new Date());
+
+      await connection.query(`
+                    
+                    INSERT INTO entries (place, description,idUser, createdAt)
+                    VALUES ( "${place}", "${description}", "${idUser}","${createdAt}" )
+                    
+                    `);
+    }
+
+    console.log('Valores insertados');
   } catch (error) {
     console.error(error.message);
   } finally {
