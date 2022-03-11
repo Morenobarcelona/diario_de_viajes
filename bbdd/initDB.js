@@ -8,10 +8,10 @@ async function main() {
   try {
     connection = await getDB();
 
-    await connection.query('DROP TABLE IF EXISTS users;');
-    await connection.query('DROP TABLE IF EXISTS entries;');
-    await connection.query('DROP TABLE IF EXISTS votes;');
     await connection.query('DROP TABLE IF EXISTS photos;');
+    await connection.query('DROP TABLE IF EXISTS votes;');
+    await connection.query('DROP TABLE IF EXISTS entries;');
+    await connection.query('DROP TABLE IF EXISTS users;');
 
     console.log('Tablas eliminadas');
 
@@ -41,6 +41,7 @@ async function main() {
               place VARCHAR(100) NOT NULL,
               description TEXT,
               idUser INT NOT NULL,
+              FOREIGN KEY (iduser) REFERENCES users (id),
               createdAt DATETIME NOT NULL,
               modifiedAt DATETIME
           
@@ -52,6 +53,7 @@ async function main() {
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 name  VARCHAR(50) NOT NULL,
                 idEntry INT NOT NULL,
+                FOREIGN KEY (idEntry) REFERENCES entries (id),
                 createdAt DATETIME NOT NULL
            )   
            `);
@@ -61,7 +63,9 @@ async function main() {
              id INT PRIMARY KEY AUTO_INCREMENT,
              vote INT NOT NULL,
              idEntry INT NOT NULL,
+             FOREIGN KEY (idEntry) REFERENCES entries (id),
              idUser INT NOT NULL,
+             FOREIGN KEY (iduser) REFERENCES users (id),
              CONSTRAINT votes_CK1 CHECK (vote IN(1,2,3,4,5)),
              createdAt DATETIME NOT NULL
 
