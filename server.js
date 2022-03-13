@@ -6,6 +6,10 @@ const app = express();
 
 const { PORT } = process.env;
 
+//IMPORTAMOS LOS CONTROLADORES DE LAS ENTRADAS
+
+const newEntry = require('./controllers/newEntry');
+
 //Logger
 
 app.use(morgan('dev'));
@@ -14,13 +18,9 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 
- //Agregar una nueva entrada
+//Agregar una nueva entrada
 
-app.post('/entries, (req,res) => {
-
-})
-
-
+app.post('/entries', newEntry);
 
 app.listen(PORT, () => {
   console.log(`SERVER LISTENING AT http://localhost:${PORT}`);
