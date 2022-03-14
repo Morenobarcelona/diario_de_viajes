@@ -1,7 +1,7 @@
 const getDB = require('../bbdd/getDB');
 const { formatDate } = require('../helpers');
 
-const newEntry = async (req, res) => {
+const newEntry = async (req, res, next) => {
   let connection;
 
   try {
@@ -11,21 +11,44 @@ const newEntry = async (req, res) => {
 
     //Si falta algun dato lanzamos  un error.
 
-    if (!place || !description || idUser) {
-      throw new Error('Faltan campos');
+    if (!place || !description || !idUser) {
+      const error = new Error('Faltan campos');
+      error.httpStatus = 404;
+      throw error;
+    }
+
+    //COmprobamos que el usuario existe.
+
+    const [user] = await connection.query(
+      `SELECT  * FROM users WHERE  id= ?`,
+
+      [idUser]
+    );
+
+    //Si el usuario no existe lanzo un error
+    if (user.length < 1) {
+      const error = new Error(' EL usuario no existe');
+      error.httpStatus = 404;
+      throw error;
     }
 
     //FEcha  creacion
-      const createdAt=formatDate(new Date());
+    const createdAt = formatDate(new Date());
 
-      //Insertamos la entrada 
-      await connection.query(`
-      
-      );`
+    //Insertamos la entrada
+    await connection.query(
+      `INSERT INTO entries  (place,description,idUser, createdAt)
+      VALUES (?,?,?,?)
+      `,
+      [place, description, idUser, createdAt]
+    );
 
-    const createdAt = res.send(req.body);
+    res.send({
+      status: 'ok',
+      message: 'La entrada ha sido creada con exito',
+    });
   } catch (error) {
-    console.error(error.message);
+    next(error);
   } finally {
     if (connection) connection.release();
   }
