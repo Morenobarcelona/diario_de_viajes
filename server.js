@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const res = require('express/lib/response');
 const morgan = require('morgan');
-const editEntry = require('./controllers/editEntry');
+
 const app = express();
 
 const { PORT } = process.env;
@@ -10,7 +10,8 @@ const { PORT } = process.env;
 //IMPORTAMOS LOS CONTROLADORES DE LAS ENTRADAS
 
 const newEntry = require('./controllers/newEntry');
-
+const editEntry = require('./controllers/editEntry');
+const getEntry = require('./controllers/listEntries');
 //Logger
 
 app.use(morgan('dev'));
@@ -26,6 +27,10 @@ app.post('/entries', newEntry);
 //Editar una entrada
 
 app.put('/entries/:idEntry', editEntry);
+
+// Obtener la lista de entradas
+
+app.get('entries', getEntry);
 
 // Middleware de error.
 
