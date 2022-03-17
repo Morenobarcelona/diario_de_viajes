@@ -1,4 +1,4 @@
-const getDB = require('../bbdd/getDB');
+const getDB = require('../../bbdd/getDB');
 
 const listEntries = async (req, res, next) => {
   let connection;

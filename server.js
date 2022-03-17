@@ -10,7 +10,7 @@ const { PORT } = process.env;
 //IMPORTAMOS LOS CONTROLADORES DE LAS ENTRADAS
 
 const newEntry = require('./controllers/newEntry');
-const editEntry = require('./controllers/editEntry');
+const editEntry = require('./controllers/entries/editEntry');
 const listEntry = require('./controllers/listEntries');
 //Logger
 

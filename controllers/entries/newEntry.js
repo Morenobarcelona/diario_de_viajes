@@ -1,5 +1,5 @@
-const getDB = require('../bbdd/getDB');
-const { formatDate } = require('../helpers');
+const getDB = require('../../bbdd/getDB');
+const { formatDate } = require('../../helpers');
 
 const newEntry = async (req, res, next) => {
   let connection;
