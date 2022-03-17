@@ -11,7 +11,7 @@ const { PORT } = process.env;
 
 const newEntry = require('./controllers/newEntry');
 const editEntry = require('./controllers/editEntry');
-const getEntry = require('./controllers/listEntries');
+const listEntry = require('./controllers/listEntries');
 //Logger
 
 app.use(morgan('dev'));
@@ -30,7 +30,7 @@ app.put('/entries/:idEntry', editEntry);
 
 // Obtener la lista de entradas
 
-app.get('entries', getEntry);
+app.get('/entries', listEntry);
 
 // Middleware de error.
 

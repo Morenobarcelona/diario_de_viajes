@@ -1,6 +1,6 @@
 const getDB = require('../bbdd/getDB');
 
-const listEntries = async (req, res) => {
+const listEntries = async (req, res, next) => {
   let connection;
 
   try {
@@ -18,7 +18,7 @@ const listEntries = async (req, res) => {
       entries,
     });
   } catch (error) {
-    console.error(error.message);
+    next(error);
   } finally {
     if (connection) connection.release();
   }
